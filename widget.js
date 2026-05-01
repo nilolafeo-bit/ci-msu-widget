@@ -106,9 +106,10 @@
 
     /* Пузыри */
     '.cimsu-msg {',
-      'padding: 10px 14px;',
+      'padding: 12px 18px;',
       'border-radius: 16px;',
-      'max-width: 82%;',
+      'max-width: 78%;',          /* чуть уже — даёт воздух по бокам */
+      'width: fit-content;',      /* пузырь не растягивается шире текста */
       'font-size: 14px;',
       'line-height: 1.55;',
       'word-break: break-word;',
@@ -122,12 +123,14 @@
       'border: 1px solid #e8e8e8;',
       'color: #222;',
       'border-radius: 4px 16px 16px 16px;',
+      'margin-right: 10px;',      /* отступ от правого края */
     '}',
     '.cimsu-user {',
       'background: #3CA342;',
       'color: #fff;',
       'align-self: flex-end;',
       'border-radius: 16px 4px 16px 16px;',
+      'margin-left: 10px;',       /* отступ от левого края */
     '}',
     '.cimsu-bot a { color: #214073; text-decoration: underline; word-break: break-all; }',
     '.cimsu-bot strong { font-weight: 600; }',
