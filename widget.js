@@ -106,7 +106,7 @@
 
     /* Пузыри */
     '.cimsu-msg {',
-      'padding: 12px 18px;',
+      'padding: 14px 20px;',
       'border-radius: 16px;',
       'max-width: 78%;',          /* чуть уже — даёт воздух по бокам */
       'width: fit-content;',      /* пузырь не растягивается шире текста */
@@ -259,7 +259,8 @@
       if (e.key === 'Escape' && isOpen) closeChat();
     });
 
-    function addMessage(text, sender, isTyping) {
+    // raw=true → доверенный HTML (приветствия, ответы n8n); raw=false → пользовательский ввод
+    function addMessage(text, sender, isTyping, raw) {
       var div = document.createElement('div');
       div.className = 'cimsu-msg cimsu-' + sender + (isTyping ? ' cimsu-typing' : '');
 
@@ -269,26 +270,15 @@
           '<div class="cimsu-dot"></div>' +
           '<div class="cimsu-dot"></div>';
         div.id = 'cimsu-typing-indicator';
+      } else if (raw) {
+        // Доверенный HTML: только **жирный** → <strong>, ссылки уже готовые
+        div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       } else {
-        // Сначала эскейпим весь текст
-        var escaped = text
+        // Пользовательский ввод — полное экранирование
+        div.innerHTML = text
           .replace(/&/g, '&amp;')
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
-
-        // Применяем лёгкий Markdown
-        var formatted = escaped
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/(https?:\/\/[^\s<>"]+)/g,
-            '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-
-        // Восстанавливаем <a>-теги из ответа n8n (вида &lt;a href=&quot;...&quot;&gt;...&lt;/a&gt;)
-        formatted = formatted.replace(
-          /&lt;a\s+href=&quot;([^&"]+)&quot;[^&]*&gt;(.*?)&lt;\/a&gt;/g,
-          '<a href="$1" target="_blank" rel="noopener noreferrer">$2</a>'
-        );
-
-        div.innerHTML = formatted;
       }
 
       messages.appendChild(div);
@@ -298,12 +288,12 @@
 
     addMessage(
       'Нихао! 👋 Я помогу вам подобрать курс китайского или сориентироваться в расписании.',
-      'bot'
+      'bot', false, true
     );
     addMessage(
       'Для мобильного доступа и уведомлений используйте наш **Telegram-бот**: ' +
       '<a href="https://t.me/ci_msu_bot" target="_blank" rel="noopener">@ci_msu_bot</a> 🐉',
-      'bot'
+      'bot', false, true
     );
 
     var isSending = false;
@@ -333,7 +323,7 @@
           var botText = data.output || data.response ||
             'Произошла небольшая ошибка. Попробуйте ещё раз.';
           typingEl.remove();
-          addMessage(botText, 'bot');
+          addMessage(botText, 'bot', false, true);
         })
         .catch(function () {
           typingEl.remove();
