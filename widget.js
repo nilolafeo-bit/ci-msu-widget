@@ -5,7 +5,7 @@
   window.__ciMsuWidgetLoaded = true;
  
   var WEBHOOK_URL =
-    'https://ai-konfu-u70272.vm.elestio.app/webhook/3ea94e41-a168-4186-88f6-e731ca6544b3/chat';
+    'https://hooks.neirolanding.ru/webhook/3ea94e41-a168-4186-88f6-e731ca6544b3/chat';
   var SESSION_ID = 'session_' + Math.random().toString(36).substr(2, 9);
  
   var css = [
